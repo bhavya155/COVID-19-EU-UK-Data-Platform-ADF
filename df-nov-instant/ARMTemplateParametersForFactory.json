@@ -1,0 +1,81 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "df-nov-instant"
+		},
+		"SqlServeronprem_connectionString": {
+			"value": "integrated security=True;Data Source=DAMU\\SQLEXPRESS;Initial Catalog=Devdbonprem"
+		},
+		"SqlServeronprem_password": {
+			"value": ""
+		},
+		"ls_adls_servicePrincipalCredential": {
+			"value": ""
+		},
+		"ls_bhavya_cloud_connectionString": {
+			"value": ""
+		},
+		"ls_bhavya_db_connectionString": {
+			"value": "integrated security=True;Data Source=DAMU\\SQLEXPRESS;Initial Catalog=bhavya"
+		},
+		"ls_bhavya_db_password": {
+			"value": ""
+		},
+		"ls_blob_servicePrincipalCredential": {
+			"value": ""
+		},
+		"ls_sqlserver_cloud_password": {
+			"value": ""
+		},
+		"SqlServeronprem_properties_typeProperties_userName": {
+			"value": "DAMU\\Bhavya"
+		},
+		"ls_Http_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/"
+		},
+		"ls_Http_covid_properties_typeProperties_url": {
+			"value": "@{linkedService().baseurl}"
+		},
+		"ls_adls_properties_typeProperties_url": {
+			"value": "https://devsepdeadls.dfs.core.windows.net/"
+		},
+		"ls_adls_properties_typeProperties_tenant": {
+			"value": "4b72edec-8a44-4971-b53a-558cd37e644b"
+		},
+		"ls_adls_properties_typeProperties_servicePrincipalId": {
+			"value": "755ac51f-aa2f-4092-a3d6-c4f0bf381238"
+		},
+		"ls_bhavya_db_properties_typeProperties_userName": {
+			"value": "DAMU\\Bhavya"
+		},
+		"ls_blob_properties_typeProperties_serviceEndpoint": {
+			"value": "https://devsepblob.blob.core.windows.net"
+		},
+		"ls_blob_properties_typeProperties_tenant": {
+			"value": "4b72edec-8a44-4971-b53a-558cd37e644b"
+		},
+		"ls_blob_properties_typeProperties_servicePrincipalId": {
+			"value": "755ac51f-aa2f-4092-a3d6-c4f0bf381238"
+		},
+		"ls_sqlserver_cloud_properties_typeProperties_server": {
+			"value": "sqlserver-cloud.database.windows.net"
+		},
+		"ls_sqlserver_cloud_properties_typeProperties_database": {
+			"value": "dev_sep_db"
+		},
+		"ls_sqlserver_cloud_properties_typeProperties_userName": {
+			"value": "adadmin"
+		},
+		"blob_storage_trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/2f51fd5c-cddf-4fd5-b752-cdbdfae56f87/resourceGroups/rs-nov-df/providers/Microsoft.Storage/storageAccounts/devsepblob"
+		},
+		"trigger1_properties_pipeline_parameters_window_start": {
+			"value": "@trigger().outputs.windowStartTime"
+		},
+		"trigger1_properties_pipeline_parameters_window_end": {
+			"value": "@trigger().outputs.windowEndTime"
+		}
+	}
+}

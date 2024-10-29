@@ -1,0 +1,252 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "df-nov-instant"
+		},
+		"SqlServeronprem_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServeronprem'",
+			"defaultValue": "integrated security=True;Data Source=DAMU\\SQLEXPRESS;Initial Catalog=Devdbonprem"
+		},
+		"SqlServeronprem_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SqlServeronprem'"
+		},
+		"ls_adls_servicePrincipalCredential": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalCredential' of 'ls_adls'"
+		},
+		"ls_bhavya_cloud_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_bhavya_cloud'"
+		},
+		"ls_bhavya_db_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_bhavya_db'",
+			"defaultValue": "integrated security=True;Data Source=DAMU\\SQLEXPRESS;Initial Catalog=bhavya"
+		},
+		"ls_bhavya_db_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_bhavya_db'"
+		},
+		"ls_blob_servicePrincipalCredential": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalCredential' of 'ls_blob'"
+		},
+		"ls_sqlserver_cloud_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_sqlserver_cloud'"
+		},
+		"SqlServeronprem_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "DAMU\\Bhavya"
+		},
+		"ls_Http_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://raw.githubusercontent.com/"
+		},
+		"ls_Http_covid_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{linkedService().baseurl}"
+		},
+		"ls_adls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://devsepdeadls.dfs.core.windows.net/"
+		},
+		"ls_adls_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "4b72edec-8a44-4971-b53a-558cd37e644b"
+		},
+		"ls_adls_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "755ac51f-aa2f-4092-a3d6-c4f0bf381238"
+		},
+		"ls_bhavya_db_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "DAMU\\Bhavya"
+		},
+		"ls_blob_properties_typeProperties_serviceEndpoint": {
+			"type": "string",
+			"defaultValue": "https://devsepblob.blob.core.windows.net"
+		},
+		"ls_blob_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "4b72edec-8a44-4971-b53a-558cd37e644b"
+		},
+		"ls_blob_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "755ac51f-aa2f-4092-a3d6-c4f0bf381238"
+		},
+		"ls_sqlserver_cloud_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlserver-cloud.database.windows.net"
+		},
+		"ls_sqlserver_cloud_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "dev_sep_db"
+		},
+		"ls_sqlserver_cloud_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "adadmin"
+		},
+		"blob_storage_trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/2f51fd5c-cddf-4fd5-b752-cdbdfae56f87/resourceGroups/rs-nov-df/providers/Microsoft.Storage/storageAccounts/devsepblob"
+		},
+		"trigger1_properties_pipeline_parameters_window_start": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
+		},
+		"trigger1_properties_pipeline_parameters_window_end": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndTime"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "df-nov-instant_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ls_adls_servicePrincipalCredential": {
+						"value": "[parameters('ls_adls_servicePrincipalCredential')]"
+					},
+					"ls_bhavya_cloud_connectionString": {
+						"value": "[parameters('ls_bhavya_cloud_connectionString')]"
+					},
+					"ls_blob_servicePrincipalCredential": {
+						"value": "[parameters('ls_blob_servicePrincipalCredential')]"
+					},
+					"SqlServeronprem_connectionString": {
+						"value": "[parameters('SqlServeronprem_connectionString')]"
+					},
+					"SqlServeronprem_password": {
+						"value": "[parameters('SqlServeronprem_password')]"
+					},
+					"ls_Http_properties_typeProperties_url": {
+						"value": "[parameters('ls_Http_properties_typeProperties_url')]"
+					},
+					"ls_Http_covid_properties_typeProperties_url": {
+						"value": "[parameters('ls_Http_covid_properties_typeProperties_url')]"
+					},
+					"ls_adls_properties_typeProperties_url": {
+						"value": "[parameters('ls_adls_properties_typeProperties_url')]"
+					},
+					"ls_adls_properties_typeProperties_tenant": {
+						"value": "[parameters('ls_adls_properties_typeProperties_tenant')]"
+					},
+					"ls_adls_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('ls_adls_properties_typeProperties_servicePrincipalId')]"
+					},
+					"ls_blob_properties_typeProperties_serviceEndpoint": {
+						"value": "[parameters('ls_blob_properties_typeProperties_serviceEndpoint')]"
+					},
+					"ls_blob_properties_typeProperties_tenant": {
+						"value": "[parameters('ls_blob_properties_typeProperties_tenant')]"
+					},
+					"ls_blob_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('ls_blob_properties_typeProperties_servicePrincipalId')]"
+					},
+					"SqlServeronprem_properties_typeProperties_userName": {
+						"value": "[parameters('SqlServeronprem_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "df-nov-instant_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ls_bhavya_db_connectionString": {
+						"value": "[parameters('ls_bhavya_db_connectionString')]"
+					},
+					"ls_bhavya_db_password": {
+						"value": "[parameters('ls_bhavya_db_password')]"
+					},
+					"ls_sqlserver_cloud_password": {
+						"value": "[parameters('ls_sqlserver_cloud_password')]"
+					},
+					"ls_bhavya_db_properties_typeProperties_userName": {
+						"value": "[parameters('ls_bhavya_db_properties_typeProperties_userName')]"
+					},
+					"ls_sqlserver_cloud_properties_typeProperties_server": {
+						"value": "[parameters('ls_sqlserver_cloud_properties_typeProperties_server')]"
+					},
+					"ls_sqlserver_cloud_properties_typeProperties_database": {
+						"value": "[parameters('ls_sqlserver_cloud_properties_typeProperties_database')]"
+					},
+					"ls_sqlserver_cloud_properties_typeProperties_userName": {
+						"value": "[parameters('ls_sqlserver_cloud_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'df-nov-instant_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "df-nov-instant_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"blob_storage_trigger_properties_typeProperties_scope": {
+						"value": "[parameters('blob_storage_trigger_properties_typeProperties_scope')]"
+					},
+					"trigger1_properties_pipeline_parameters_window_start": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_window_start')]"
+					},
+					"trigger1_properties_pipeline_parameters_window_end": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_window_end')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'df-nov-instant_ArmTemplate_1')]"
+			]
+		}
+	]
+}
