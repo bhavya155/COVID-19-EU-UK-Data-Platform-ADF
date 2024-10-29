@@ -1,0 +1,110 @@
+{
+	"name": "df_moviesdb",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_adls_csv",
+						"type": "DatasetReference"
+					},
+					"name": "source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_adls_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sinkStream",
+					"rejectedDataLinkedService": {
+						"referenceName": "ls_adls",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectstream",
+					"description": "omato'"
+				},
+				{
+					"name": "filterStream"
+				},
+				{
+					"name": "derivedGenreStream"
+				},
+				{
+					"name": "selectSteam"
+				},
+				{
+					"name": "windowStream"
+				},
+				{
+					"name": "aggregateStream"
+				},
+				{
+					"name": "DataQualityCheck"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          movie as integer,",
+				"          title as string,",
+				"          genres as string,",
+				"          year as short,",
+				"          Rating as short,",
+				"          {Rotton Tomato} as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: true,",
+				"     moveFiles: ['movies_db','archive'],",
+				"     wildcardPaths:['/movies_db']) ~> source",
+				"source select(mapColumn(",
+				"          movie,",
+				"          title,",
+				"          genres,",
+				"          year,",
+				"          {Rotten Tomato} = {Rotton Tomato}",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> selectstream",
+				"selectstream filter(year>1910 && year<2000) ~> filterStream",
+				"filterStream derive({first genre} = case(instr(genres,'|')==0, genres, substring(genres,1,instr(genres,'|')-1))) ~> derivedGenreStream",
+				"derivedGenreStream select(mapColumn(",
+				"          movie,",
+				"          title,",
+				"          year,",
+				"          {Rotten Tomato},",
+				"          {first genre}",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> selectSteam",
+				"selectSteam window(over({first genre},",
+				"          year),",
+				"     asc({Rotten Tomato}, true),",
+				"     asc(year, true),",
+				"     rank = denseRank()) ~> windowStream",
+				"windowStream aggregate(groupBy({first genre},",
+				"          year),",
+				"     max = max({Rotten Tomato}),",
+				"          min = min({Rotten Tomato}),",
+				"          avg = avg({Rotten Tomato}),",
+				"          count = count({Rotten Tomato})) ~> aggregateStream",
+				"aggregateStream assert(expectTrue(year<1950, true, 'qualitycheck', null, toString(year)+'greater than 1950')) ~> DataQualityCheck",
+				"DataQualityCheck sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0074,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     outputAssertFailedRows: true,",
+				"     assertFailure_fileSystem: 'moviesdb',",
+				"     assertFailure_folderPath: 'error',",
+				"     ignoreAssertFailedRows: true) ~> sinkStream"
+			]
+		}
+	}
+}

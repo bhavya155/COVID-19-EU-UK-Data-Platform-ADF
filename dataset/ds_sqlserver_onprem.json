@@ -1,0 +1,39 @@
+{
+	"name": "ds_sqlserver_onprem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServeronprem",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "category_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "category_name",
+				"type": "varchar"
+			},
+			{
+				"name": "created_at",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "updated_at",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "CATEGORIES"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

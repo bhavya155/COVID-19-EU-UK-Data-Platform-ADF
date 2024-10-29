@@ -1,0 +1,36 @@
+{
+	"name": "shedule_trigger_everylast_day_ofmonth",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_ECDC_metadatadriven_http",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Month",
+				"interval": 1,
+				"startTime": "2024-10-28T16:11:00",
+				"endTime": "2024-12-31T00:00:00",
+				"timeZone": "India Standard Time",
+				"schedule": {
+					"minutes": [
+						30
+					],
+					"hours": [
+						12
+					],
+					"monthDays": [
+						-1
+					]
+				}
+			}
+		}
+	}
+}

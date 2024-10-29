@@ -1,0 +1,37 @@
+{
+	"name": "ds_adls_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "config_covid.json",
+				"folderPath": "config_adls_sql",
+				"fileSystem": "silver"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"CONTAINER_NAME": {
+					"type": "string"
+				},
+				"DESTINATION_TABLE": {
+					"type": "string"
+				},
+				"MERGE_KEY": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

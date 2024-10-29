@@ -1,0 +1,36 @@
+{
+	"name": "ds_metadata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "metadata.json",
+				"fileSystem": "config"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"TABLE_NAME": {
+					"type": "string"
+				},
+				"WaterMark_Column": {
+					"type": "string"
+				},
+				"MERGE_KEY": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

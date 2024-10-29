@@ -1,0 +1,44 @@
+{
+	"name": "pl_cases_deaths_dataflow",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_covid_deaths",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"source1": {
+								"container_name": "raw",
+								"file_name": "covid/cases_deaths"
+							},
+							"sink": {
+								"container_name": "silver",
+								"file_name": "covid/casesdeaths/report"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-10-29T05:28:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

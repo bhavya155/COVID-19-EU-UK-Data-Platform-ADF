@@ -1,0 +1,24 @@
+{
+	"name": "blob_storage_trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Pl_ingestion_blob_adls_covid",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/population/blobs/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/2f51fd5c-cddf-4fd5-b752-cdbdfae56f87/resourceGroups/rs-nov-df/providers/Microsoft.Storage/storageAccounts/devsepblob",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

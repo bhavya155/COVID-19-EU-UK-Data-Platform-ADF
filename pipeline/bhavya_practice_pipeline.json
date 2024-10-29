@@ -1,0 +1,252 @@
+{
+	"name": "bhavya_practice_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "get metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('get metadata').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "onprem-cloud",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "WM_Lookup_new",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "water_mark_lookup",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column}>'@{activity('water_mark_lookup').output.firstRow.WatermarkValue}' and\n@{item().WaterMark_Column}<='@{activity('WM_Lookup_new').output.firstRow.last_modified_at}'\n",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"isolationLevel": "ReadCommitted",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"writeBehavior": "upsert",
+									"upsertSettings": {
+										"useTempDB": true,
+										"keys": {
+											"value": "@item().MERGE_KEY",
+											"type": "Expression"
+										}
+									},
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"validateDataConsistency": true,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_ss_bhavya_onprem",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_ss_bhavya_cloud",
+									"type": "DatasetReference",
+									"parameters": {
+										"destinationtable": {
+											"value": "@{item().TABLE_NAME}",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "water_mark_lookup",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select WatermarkValue from watermarktable where TableName='@{item().TABLE_NAME}'",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"isolationLevel": "ReadCommitted",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "ds_ss_bhavya_cloud",
+									"type": "DatasetReference",
+									"parameters": {
+										"destinationtable": {
+											"value": "@{item().TABLE_NAME}",
+											"type": "Expression"
+										}
+									}
+								}
+							}
+						},
+						{
+							"name": "Stored procedure",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "onprem-cloud",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[usp_write_watermark]",
+								"storedProcedureParameters": {
+									"LastModifiedtime": {
+										"value": {
+											"value": "@{activity('WM_Lookup_new').output.firstRow.last_modified_at}",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"TableName": {
+										"value": {
+											"value": "@{item().TABLE_NAME}",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_bhavya_cloud",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "WM_Lookup_new",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select max(updated_at) as last_modified_at from @{item().TABLE_NAME}",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"isolationLevel": "ReadCommitted",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "ds_ss_bhavya_onprem",
+									"type": "DatasetReference"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "get metadata",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_metadata",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"table_list": {
+				"type": "array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-10-16T06:45:59Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

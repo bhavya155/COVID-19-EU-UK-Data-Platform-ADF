@@ -1,0 +1,248 @@
+{
+	"name": "pl_onprem_to_cloud_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "get_metadata_Lookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('get_metadata_Lookup').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "watermark_lookup_old",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "watermark_lookup_new",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "Select * from @{item().TABLE_NAME} where @{item().WaterMark_Column}> '@{activity('watermark_lookup_old').output.firstRow.WatermarkValue}' and @{item().WaterMark_Column}<='@{activity('watermark_lookup_new').output.firstRow.newwm}'",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"isolationLevel": "ReadCommitted",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"writeBehavior": "upsert",
+									"upsertSettings": {
+										"useTempDB": true,
+										"keys": {
+											"value": "@item().MERGE_KEY",
+											"type": "Expression"
+										}
+									},
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"validateDataConsistency": true,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_sqlserver_onprem",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_sqlserver_cloud",
+									"type": "DatasetReference",
+									"parameters": {
+										"Dest_Table_Name": {
+											"value": "@{item().TABLE_NAME}",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "watermark_lookup_old",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select WatermarkValue from watermarktable where TableName='@{item().TABLE_NAME}'",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"isolationLevel": "ReadCommitted",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "ds_sqlserver_cloud",
+									"type": "DatasetReference",
+									"parameters": {
+										"Dest_Table_Name": {
+											"value": "@{item().TABLE_NAME}",
+											"type": "Expression"
+										}
+									}
+								}
+							}
+						},
+						{
+							"name": "Stored procedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Copy data1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[usp_write_watermark]",
+								"storedProcedureParameters": {
+									"LastModifiedtime": {
+										"value": {
+											"value": "@activity('watermark_lookup_new').output.firstRow.newwm",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"TableName": {
+										"value": {
+											"value": "@{item().TABLE_NAME}",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_sqlserver_cloud",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "watermark_lookup_new",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select max(@{item().WaterMark_Column}) as newwm from @{item().TABLE_NAME}\n",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"isolationLevel": "ReadCommitted",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "ds_sqlserver_onprem",
+									"type": "DatasetReference"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "get_metadata_Lookup",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": false,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_metadata",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-10-29T05:31:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

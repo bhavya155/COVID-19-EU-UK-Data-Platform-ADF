@@ -1,0 +1,9 @@
+{
+	"name": "df-nov-instant",
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f2dab306-bd4c-4be8-91d1-50e13f97d572",
+		"tenantId": "4b72edec-8a44-4971-b53a-558cd37e644b"
+	}
+}
