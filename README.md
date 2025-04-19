@@ -1,20 +1,13 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+This projects demonstrate the use of various ADF components such as pipelines, dataflows, datasets, linked services, and integration runtimes to automate and orchestrate data movement and transformation at scale.
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
-
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
-
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+⚙️ Technologies Used
+Azure Data Factory (ADF)
+Azure Blob Storage / ADLS Gen2
+Azure SQL Database
+Azure Monitor (for pipeline monitoring)
+⚙️ Project Highlights
+Built ETL pipelines to ingest data from multiple sources (e.g., APIs, on-prem databases, cloud storage).
+Performed data transformation using Mapping Data Flows .
+Configured parameterized pipelines for dynamic and reusable workflows.
+Integrated logging and alerting for monitoring pipeline executions.
+Scheduled pipelines using triggers and managed dependencies between activities.
