@@ -6,7 +6,7 @@ This project contains a collection of Azure Data Factory (ADF) pipelines designe
 ## 🚀 Project Overview
 
 The project handles multiple ingestion pipelines that move data from:
-- On-premises SQL Server to cloud storage
+- On-premises SQL Server to cloud SQL Server 
 - Azure Data Lake Storage (ADLS Gen2) to cloud targets
 - Azure Blob Storage and HTTP sources for COVID data analysis
 
