@@ -1,27 +1,19 @@
+📊 Project Title: COVID-19 Data Platform using Azure Data Factory
+🛠 Tools & Technologies
+Azure Data Factory | Azure Data Lake Gen2 | Azure Blob Storage | Power BI | Azure SQL Database | GitHub | ADF Data Flows
 
-# Azure Data Factory Pipelines - Data Ingestion & Transformation Project
+📄 Project Description
+Designed and implemented an end-to-end data pipeline to track COVID-19 trends across EU countries and the UK. The data was sourced from public repositories (ECDC and Eurostat), transformed using Azure Data Factory Data Flows, and loaded into Azure SQL Database to enable Power BI-based reporting and analytics.
 
-This project contains a collection of Azure Data Factory (ADF) pipelines designed to perform various data ingestion and transformation tasks from diverse sources, with a focus on scalability, parameterization, and modularity.
+🔍 Detailed Workflow
+Data Ingestion: Retrieved daily and weekly COVID-19 datasets (cases, deaths, hospitalizations, tests, and population data) from Azure Blob and HTTP endpoints using parameterized ADF pipelines.
 
-## 🚀 Project Overview
+Validation: Performed metadata validation and file integrity checks using ADF control flow activities (Validation, Get Metadata, If Condition).
 
-The project handles multiple ingestion pipelines that move data from:
-- On-premises SQL Server to cloud SQL Server 
-- Azure Data Lake Storage (ADLS Gen2) to cloud targets
-- Azure Blob Storage and HTTP sources for COVID data analysis
+Data Transformation: Applied transformations such as pivoting, filtering, joining with dimension tables (country, date), renaming columns, and splitting data based on frequency (daily/weekly) using ADF Data Flows.
 
-These pipelines are configured using ADF's parameterization capabilities and support scalable transformation logic through Data Flows.
+Automation: Used Lookup and ForEach activities with a JSON-driven metadata file to automate ingestion and transformation for multiple datasets.
 
-## 🛠️ Tech Stack
+Date Enrichment: Incorporated a Date Dimension table to calculate and attach week start/end dates for weekly datasets.
 
-- **Azure Data Factory (ADF)**
-- **Azure Data Lake Storage Gen2 (ADLS)**
-- **Azure Blob Storage**
-- **Self-hosted Integration Runtime (SHIR)**
-- **Azure SQL Database**
-- **HTTP Datasets**
-- **Data Flows**
-
-
-
-
+Data Loading: Loaded processed data into Azure SQL Database for reporting purposes.
