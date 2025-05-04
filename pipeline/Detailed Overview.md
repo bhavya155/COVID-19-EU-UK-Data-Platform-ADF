@@ -1,17 +1,29 @@
 
 📂 Project Structure
 
+
 covid-data-pipeline/
+
 ├── ingestion/
-│   ├── blob_to_adls_pipeline.json
-│   ├── http_to_adls_pipeline.json
-│   ├── parameterized_http_ingestion/
+
+    ├── blob_to_adls_pipeline.json
+
+    ├── http_to_adls_pipeline.json
+
+    ├── parameterized_http_ingestion/
+
 ├── transformations/
-│   ├── cases_deaths_dataflow.json
-│   ├── hospital_admissions_dataflow.json
-│   ├── testing_dataflow.json
+
+    ├── cases_deaths_dataflow.json
+
+    ├── hospital_admissions_dataflow.json
+
+    ├── testing_dataflow.json
+
 ├── load/
-    └── adls_to_azure_sql_pipeline.json
+
+    ├──  adls_to_azure_sql_pipeline.json
+
 
 
 ✅ Assignments & Implementation
