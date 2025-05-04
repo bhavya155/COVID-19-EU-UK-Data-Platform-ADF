@@ -20,9 +20,6 @@ covid-data-pipeline/
 
     ├── testing_dataflow.json
 
-├── load/
-
-    ├──  adls_to_azure_sql_pipeline.json
 
 
 
@@ -151,6 +148,10 @@ Derive cases_count, deaths_count
 
 Rename, drop and select columns
 
+
+![image](https://github.com/user-attachments/assets/26bfa501-f2e9-4e1a-8301-486181ef4bbc)
+
+
 🔗 Data Flow Overview
 
 Assignment 5: Transform hospital_admissions.csv Using Data Flows
@@ -165,6 +166,10 @@ Final output: weekly and daily datasets
 🔗 Aggregate Transformation
 🔗 Conditional Split
 
+
+![image](https://github.com/user-attachments/assets/d336519a-b740-4ec2-acbd-81964b50800e)
+
+
 Assignment 6: Transform testing.csv
 Add 2- and 3-digit country codes
 
@@ -172,10 +177,8 @@ Add week start/end date via date dimension
 
 🔗 Join Transformation
 
-Assignment 7: Load Transformed Data to Azure SQL
-Use Copy Activity from ADLS Gen2 to Azure SQL Database
 
-Prepare tables for Power BI reporting
+![image](https://github.com/user-attachments/assets/ec206aff-cd63-474d-94e4-e352db89529c)
 
-🔗 Copy to Azure SQL
+
 
