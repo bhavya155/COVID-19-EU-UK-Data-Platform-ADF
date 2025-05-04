@@ -29,6 +29,12 @@ covid-data-pipeline/
 ✅ Assignments & Implementation
 
 Assignment 1: Ingest Data from Azure Blob to ADLS Gen2
+
+IR : AUTO RESOLVE
+Linked Services :
+            ls_blob
+            ls_adls_gen2
+            
 Copy activity with validations and file deletion post-copy
 
 Triggered by event-based execution
@@ -80,7 +86,18 @@ after delete activity in blob
 Assignment 2: Ingest Data from HTTP to ADLS Gen2
 Direct copy from GitHub via HTTP
 
+IR : AUTO RESOLVE
+Linked Services :
+            ls_http
+            ls_adls_gen2
+
 CSV: cases_deaths.csv
+
+![image](https://github.com/user-attachments/assets/1dfa766b-d16a-4b4f-94bb-d4b37f53b67b)
+
+![image](https://github.com/user-attachments/assets/cf9c42d2-2e07-4857-9ea3-5d98f2102055)
+
+
 
 🔗 HTTP Linked Service
 
@@ -99,6 +116,33 @@ Executes via Lookup and ForEach activities
 
 🔗 Lookup Activity
 🔗 ForEach Activity
+
+![image](https://github.com/user-attachments/assets/599f084d-fbf0-4b43-96d1-8ce8d9ca9ae7)
+
+Get Metadata
+
+![image](https://github.com/user-attachments/assets/e2c18ecc-f0fe-433d-ae3b-b4057db254fb)
+
+![image](https://github.com/user-attachments/assets/a636e042-8161-467d-9b54-2fa6a4d688df)
+
+For Each 
+
+![image](https://github.com/user-attachments/assets/47c6002c-276a-460b-a583-ed52f1da807a)
+
+Copy:
+
+Source
+
+![image](https://github.com/user-attachments/assets/df277c8b-eca6-422e-b254-1c5477ae2a9d)
+
+sink :
+
+![image](https://github.com/user-attachments/assets/e351e0fe-0add-4826-8ff5-7449049cfb4b)
+
+
+
+
+
 
 Assignment 4: Transform cases_deaths.csv Using Data Flows
 Extract 2-digit country code
