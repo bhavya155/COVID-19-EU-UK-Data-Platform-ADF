@@ -1,4 +1,7 @@
 📊 Project Title: COVID-19 Data Platform using Azure Data Factory
+
+  [ detailed_overview ](https://github.com/bhavya155/COVID-19-EU-UK-Data-Platform-ADF/blob/2e81f82f6ab58bd970c0bbd6a791a34118c09623/pipeline/Detailed%20Overview.md)
+   
 🛠 Tools & Technologies
 Azure Data Factory | Azure Data Lake Gen2 | Azure Blob Storage | Power BI | Azure SQL Database | GitHub | ADF Data Flows
 
